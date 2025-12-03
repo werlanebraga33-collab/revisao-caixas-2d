@@ -12,7 +12,7 @@
     body{
       margin:0;
       padding:16px;
-      background:radial-gradient(circle at top,#1f2937,#020617);
+      background:#f3f4f6;
       min-height:100vh;
       display:flex;
       flex-direction:column;
@@ -25,58 +25,39 @@
       max-width:440px;
       display:flex;
       flex-direction:column;
-      gap:10px;
+      gap:12px;
     }
     .card-form{
       width:100%;
-      background:rgba(249,250,251,0.98);
-      border-radius:22px;
-      padding:0 14px 16px;
-      box-shadow:0 18px 40px rgba(0,0,0,.45);
-      border:1px solid rgba(148,163,184,.35);
-      backdrop-filter:blur(10px);
+      background:#ffffff;
+      border-radius:18px;
+      padding:14px 14px 16px;
+      box-shadow:0 10px 30px rgba(15,23,42,.18);
+      border:1px solid #e5e7eb;
     }
     .card-header{
-      margin:0 -14px 10px;
-      padding:12px 18px 14px;
-      border-radius:22px 22px 14px 14px;
-      background:linear-gradient(135deg,#111827,#1d4ed8);
-      display:flex;
-      flex-direction:column;
-      gap:4px;
+      margin:0 0 10px;
+      padding-bottom:8px;
+      border-bottom:1px solid #e5e7eb;
     }
     .card-title{
-      font-size:17px;
+      font-size:18px;
       font-weight:700;
-      color:#f9fafb;
+      color:#111827;
     }
     .card-subtitle{
       font-size:12px;
-      color:#cbd5f5;
+      color:#6b7280;
+      margin-top:2px;
     }
-    .pill-row{
-      display:flex;
-      gap:6px;
-      margin-top:4px;
-      flex-wrap:wrap;
-    }
-    .pill{
-      font-size:11px;
-      padding:2px 8px;
-      border-radius:999px;
-      border:1px solid rgba(148,163,184,.7);
-      color:#e5e7eb;
-    }
-
     .section-label{
       font-size:11px;
       font-weight:600;
       text-transform:uppercase;
       letter-spacing:0.06em;
       color:#6b7280;
-      margin:4px 2px 4px;
+      margin:8px 2px 4px;
     }
-
     .form-row{display:flex;gap:8px}
     .form-group{
       display:flex;
@@ -100,8 +81,8 @@
       transition:border-color .15s,box-shadow .15s,transform .08s;
     }
     input:focus,textarea:focus,select:focus{
-      border-color:#4f46e5;
-      box-shadow:0 0 0 1px rgba(79,70,229,.35);
+      border-color:#111827;
+      box-shadow:0 0 0 1px rgba(15,23,42,.35);
       transform:translateY(-1px);
     }
     textarea{
@@ -114,17 +95,17 @@
       display:flex;
       flex-wrap:wrap;
       gap:8px;
-      margin-top:8px;
+      margin-top:10px;
     }
     .btn{
       border:none;
       border-radius:999px;
-      padding:9px 12px;
+      padding:10px 14px;
       font-size:14px;
       font-weight:600;
       cursor:pointer;
       flex:1;
-      min-width:130px;
+      min-width:180px;
       display:flex;
       align-items:center;
       justify-content:center;
@@ -132,25 +113,12 @@
       transition:transform .08s,box-shadow .12s,background .12s;
       white-space:nowrap;
     }
-    .btn-primary{
-      background:linear-gradient(135deg,#111827,#16a34a);
+    .btn-main{
+      background:#111827;
       color:#f9fafb;
-      box-shadow:0 8px 16px rgba(15,23,42,.6);
+      box-shadow:0 8px 18px rgba(15,23,42,.5);
     }
-    .btn-secondary{
-      background:#e5e7eb;
-      color:#111827;
-    }
-    .btn-outline{
-      background:transparent;
-      border:1px solid #9ca3af;
-      color:#111827;
-    }
-    .btn-outline.alt{
-      color:#e5e7eb;
-      border-color:#9ca3af;
-    }
-    .btn:active{
+    .btn-main:active{
       transform:translateY(1px);
       box-shadow:none;
     }
@@ -162,17 +130,17 @@
     }
 
     .preview-title{
-      color:#e5e7eb;
+      color:#4b5563;
       font-size:12px;
-      text-shadow:0 1px 2px rgba(0,0,0,.7);
+      padding-left:4px;
     }
     canvas{
       width:100%;
       max-width:440px;
-      border-radius:18px;
-      background:#020617;
-      box-shadow:0 22px 46px rgba(0,0,0,.75);
-      border:1px solid rgba(30,64,175,.6);
+      border-radius:14px;
+      background:#ffffff;
+      box-shadow:0 16px 40px rgba(15,23,42,.28);
+      border:1px solid #e5e7eb;
     }
   </style>
 </head>
@@ -182,12 +150,7 @@
       <div class="card-header">
         <div class="card-title">Revisão de Caixas - 2D</div>
         <div class="card-subtitle">
-          Registro rápido de caixas revisadas para líder técnico e preparador.
-        </div>
-        <div class="pill-row">
-          <div class="pill">Geração de imagem</div>
-          <div class="pill">Pronto para WhatsApp</div>
-          <div class="pill">Turno / Programa / Documento</div>
+          Preencha os dados da revisão e gere um registro padronizado para envio.
         </div>
       </div>
 
@@ -202,7 +165,7 @@
         </div>
         <div class="form-group">
           <label>Responsável</label>
-          <input id="responsavel" placeholder="Seu nome" />
+          <input id="responsavel" placeholder="Ex.: Verlaine" />
         </div>
       </div>
 
@@ -250,26 +213,20 @@
 
       <div class="section-label">Descrição dos problemas</div>
       <div class="form-group">
-        <textarea id="descricao" placeholder="Ex.: Bolhas no verniz, falha de registro magenta, falta de base em 3 pares..."></textarea>
+        <textarea id="descricao" placeholder="Ex.: Bolhas no verniz, falha de registro, falta de base em 3 pares..."></textarea>
       </div>
 
       <div class="buttons">
-        <button class="btn btn-primary" id="btnGerar">Gerar imagem</button>
-        <button class="btn btn-secondary" id="btnDownload">Baixar PNG</button>
-      </div>
-
-      <div class="buttons">
-        <button class="btn btn-outline" id="btnShare">Gerar e Compartilhar</button>
-        <button class="btn btn-outline" id="btnWhats">Texto WhatsApp</button>
+        <button class="btn btn-main" id="btnShareAll">Gerar & Compartilhar</button>
       </div>
 
       <div class="hint">
-        • Preencha os campos, clique em <b>Gerar imagem</b> e use <b>Gerar e Compartilhar</b> para enviar direto pelo celular.<br>
-        • O layout da imagem fica padronizado para auditorias e passagem de turno.
+        • O botão acima já gera a imagem e abre o compartilhamento (WhatsApp, e-mail etc.).<br>
+        • Se o compartilhamento não for suportado, o arquivo será baixado como PNG.
       </div>
     </div>
 
-    <div class="preview-title">Preview da imagem gerada para envio</div>
+    <div class="preview-title">Prévia da imagem gerada</div>
     <canvas id="canvas" width="1080" height="1920"></canvas>
   </div>
 
@@ -436,59 +393,67 @@
       ctx.textAlign="left";
     }
 
-    // BOTÕES
-    document.getElementById("btnGerar").addEventListener("click",()=>draw());
-
-    document.getElementById("btnDownload").addEventListener("click",()=>{
+    async function gerarECompartilhar() {
       draw();
-      const a=document.createElement("a");
-      a.download="revisao-caixas-2d.png";
-      a.href=canvas.toDataURL("image/png");
-      a.click();
-    });
 
-    // GERAR E COMPARTILHAR
-    document.getElementById("btnShare").addEventListener("click", async ()=>{
-      draw();
-      canvas.toBlob(async blob=>{
-        const file=new File([blob],"revisao-caixas.png",{type:"image/png"});
-        if(navigator.share){
-          try{
+      canvas.toBlob(async (blob) => {
+        if (!blob) return;
+
+        const file = new File([blob], "revisao-caixas-2d.png", {
+          type: "image/png",
+        });
+
+        if (navigator.share && navigator.canShare && navigator.canShare({ files:[file] })) {
+          try {
             await navigator.share({
-              title:"Revisão de caixas",
-              text:"Relatório gerado pelo app",
-              files:[file]
+              title: "Revisão de Caixas - 2D",
+              text: "Relatório gerado pelo app de revisão de caixas.",
+              files: [file],
             });
-          }catch(err){
-            console.log("Compartilhamento cancelado",err);
+          } catch (err) {
+            console.log("Compartilhamento cancelado:", err);
           }
-        }else{
-          alert("Seu navegador não suporta o botão de compartilhar.");
+        } else if (navigator.share) {
+          // share sem files: manda só texto + link
+          const d = getData();
+          const texto = [
+            "REVISÃO DE CAIXAS - 2D",
+            `Função: ${d.funcao}`,
+            `Responsável: ${d.responsavel}`,
+            `Turno: ${d.turno}`,
+            `Programa: ${d.programa}`,
+            `Documento: ${d.documento}`,
+            `Número: ${d.numero}`,
+            `Data: ${d.data}`,
+            `Qtde caixas revisadas: ${d.qtdRevisadas}`,
+            `Qtde problemas: ${d.qtdProblemas}`,
+            "",
+            "Descrição dos problemas:",
+            d.descricao
+          ].join("\n");
+          try {
+            await navigator.share({ title: "Revisão de Caixas - 2D", text: texto });
+          } catch(e){
+            console.log("Compartilhamento cancelado:", e);
+          }
+        } else {
+          // fallback: baixar PNG
+          const a = document.createElement("a");
+          a.download = "revisao-caixas-2d.png";
+          a.href = URL.createObjectURL(blob);
+          a.click();
+          URL.revokeObjectURL(a.href);
+          alert("Compartilhamento não suportado. O arquivo foi baixado como PNG.");
         }
       });
+    }
+
+    document.getElementById("btnShareAll").addEventListener("click", (e) => {
+      e.preventDefault();
+      gerarECompartilhar();
     });
 
-    // TEXTO PARA WHATSAPP
-    document.getElementById("btnWhats").addEventListener("click",()=>{
-      const d=getData();
-      const texto=[
-        "REVISÃO DE CAIXAS - 2D",
-        `Função: ${d.funcao}`,
-        `Responsável: ${d.responsavel}`,
-        `Turno: ${d.turno}`,
-        `Programa: ${d.programa}`,
-        `Documento: ${d.documento}`,
-        `Número: ${d.numero}`,
-        `Data: ${d.data}`,
-        `Qtde caixas revisadas: ${d.qtdRevisadas}`,
-        `Qtde problemas: ${d.qtdProblemas}`,
-        "",
-        "Descrição dos problemas:",
-        d.descricao
-      ].join("\n");
-      window.open("https://wa.me/?text="+encodeURIComponent(texto),"_blank");
-    });
-
+    // desenha uma prévia inicial vazia
     draw();
   </script>
 </body>
