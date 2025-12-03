@@ -2,368 +2,424 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <title>Revisão de Caixas - 2D</title>
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Inspeção de Caixas - 2D</title>
+
+  <!-- html2canvas para gerar a imagem do relatório -->
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+
   <style>
-    *{box-sizing:border-box;font-family:system-ui,-apple-system,"Segoe UI",sans-serif}
-    body{
-      margin:0;
-      padding:16px;
-      background:#f3f4f6;
-      min-height:100vh;
-      display:flex;
-      justify-content:center;
-      align-items:flex-start;
-    }
-    .card{
-      background:#fff;
-      width:100%;
-      max-width:440px;
-      padding:16px;
-      border-radius:18px;
-      box-shadow:0 8px 26px rgba(0,0,0,.18);
-      border:1px solid #e5e7eb;
-    }
-    h1{
-      font-size:20px;
-      margin:0 0 10px;
-      text-align:center;
-      color:#111827;
-    }
-    .sub{
-      font-size:12px;
-      text-align:center;
-      color:#6b7280;
-      margin-bottom:12px;
-    }
-    label{
-      font-size:12px;
-      font-weight:600;
-      color:#374151;
-      margin-bottom:3px;
-      display:block;
-    }
-    input,textarea,select{
-      width:100%;
-      padding:8px;
-      border:1px solid #d1d5db;
-      border-radius:10px;
-      margin-bottom:10px;
-      font-size:14px;
-      outline:none;
-      background:#fff;
-    }
-    input:focus,textarea:focus,select:focus{
-      border-color:#111827;
-      box-shadow:0 0 0 1px rgba(15,23,42,.35);
-    }
-    textarea{min-height:70px;resize:vertical}
-    .row{display:flex;gap:8px}
-    .row > div{flex:1}
-
-    /* Botões de turno */
-    .turno-buttons{
-      display:flex;
-      gap:8px;
-      margin-bottom:10px;
-    }
-    .turno-buttons button{
-      flex:1;
-      padding:10px 0;
-      border-radius:10px;
-      border:1px solid #d1d5db;
-      background:#f9fafb;
-      font-weight:600;
-      font-size:14px;
-      cursor:pointer;
-      transition:.15s;
-    }
-    .turno-buttons button.active{
-      background:#111827;
-      color:#fff;
-      border-color:#111827;
-      transform:translateY(-1px);
-      box-shadow:0 4px 10px rgba(0,0,0,.25);
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
 
-    .btn{
-      width:100%;
-      padding:12px;
-      margin-top:8px;
-      background:#111827;
-      color:white;
-      border:none;
-      border-radius:999px;
-      font-size:15px;
-      font-weight:600;
-      cursor:pointer;
-      box-shadow:0 6px 18px rgba(0,0,0,.25);
-    }
-    .btn:active{transform:translateY(1px);box-shadow:none}
-
-    .hint{
-      font-size:11px;
-      color:#6b7280;
-      margin-top:6px;
+    body {
+      background: #f3f5f8;
+      padding: 16px;
+      color: #111827;
+      display: flex;
+      justify-content: center;
     }
 
-    canvas{
-      width:100%;
-      max-width:440px;
-      margin-top:18px;
-      border-radius:12px;
-      border:1px solid #e5e7eb;
-      background:#fff;
-      box-shadow:0 10px 28px rgba(0,0,0,.2);
+    .page {
+      max-width: 480px;
+      width: 100%;
+    }
+
+    .card {
+      background: #ffffff;
+      border-radius: 24px;
+      padding: 20px 18px 24px;
+      box-shadow: 0 18px 40px rgba(15, 23, 42, 0.18);
+      margin-bottom: 20px;
+    }
+
+    .title {
+      text-align: center;
+      font-weight: 800;
+      font-size: 20px;
+      letter-spacing: 0.03em;
+      color: #111827;
+      margin-bottom: 4px;
+    }
+
+    .subtitle {
+      text-align: center;
+      font-size: 13px;
+      color: #6b7280;
+      margin-bottom: 18px;
+    }
+
+    .field-group {
+      margin-bottom: 12px;
+    }
+
+    .field-label {
+      font-size: 13px;
+      font-weight: 600;
+      color: #4b5563;
+      margin-bottom: 4px;
+      display: block;
+    }
+
+    input[type="text"],
+    input[type="number"],
+    input[type="date"],
+    select,
+    textarea {
+      width: 100%;
+      border-radius: 12px;
+      border: 1px solid #d1d5db;
+      padding: 10px 12px;
+      font-size: 14px;
+      color: #111827;
+      background: #f9fafb;
+      outline: none;
+      transition: border 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      border-color: #111827;
+      background: #ffffff;
+      box-shadow: 0 0 0 2px rgba(17, 24, 39, 0.10);
+    }
+
+    .row {
+      display: flex;
+      gap: 10px;
+    }
+
+    .row > .field-group {
+      flex: 1;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+
+    .btn-main {
+      width: 100%;
+      border: none;
+      border-radius: 999px;
+      padding: 14px 16px;
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      background: #111827;
+      color: white;
+      margin-top: 10px;
+      cursor: pointer;
+      box-shadow: 0 14px 30px rgba(15, 23, 42, 0.45);
+      transition: transform 0.08s ease, box-shadow 0.08s ease, opacity 0.08s ease;
+    }
+
+    .btn-main:active {
+      transform: translateY(1px) scale(0.99);
+      box-shadow: 0 10px 22px rgba(15, 23, 42, 0.36);
+      opacity: 0.96;
+    }
+
+    .helper-text {
+      margin-top: 8px;
+      font-size: 11px;
+      color: #6b7280;
+      line-height: 1.35;
+    }
+
+    /* Card do relatório (preview/print) */
+    .report-card {
+      background: #ffffff;
+      border-radius: 24px;
+      padding: 22px 18px 24px;
+      box-shadow: 0 10px 26px rgba(15, 23, 42, 0.22);
+    }
+
+    .report-title {
+      text-align: center;
+      font-weight: 800;
+      font-size: 18px;
+      letter-spacing: 0.08em;
+      margin-bottom: 12px;
+      color: #111827;
+      text-transform: uppercase;
+    }
+
+    .report-section {
+      margin-bottom: 10px;
+      font-size: 13px;
+      line-height: 1.4;
+    }
+
+    .report-section strong {
+      color: #111827;
+    }
+
+    .report-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .report-row div {
+      flex: 1;
+    }
+
+    .report-label {
+      font-weight: 600;
+      color: #4b5563;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+
+    .report-value {
+      font-size: 13px;
+      margin-top: 2px;
     }
   </style>
 </head>
-
 <body>
-  <div>
+  <div class="page">
+    <!-- FORMULÁRIO -->
     <div class="card">
-      <h1>Revisão de Caixas - 2D</h1>
-      <div class="sub">Preencha os dados e toque em “Gerar & Compartilhar”.</div>
+      <h1 class="title">Inspeção de Caixas - 2D</h1>
+      <p class="subtitle">Preencha os dados e toque em “Gerar & Compartilhar”.</p>
 
-      <label>Função</label>
-      <select id="funcao">
-        <option>Líder Técnico</option>
-        <option>Preparador</option>
-      </select>
+      <div class="field-group">
+        <label class="field-label" for="funcao">Função</label>
+        <select id="funcao">
+          <option value="Líder Técnico">Líder Técnico</option>
+          <option value="Preparador">Preparador</option>
+          <option value="Supervisor">Supervisor</option>
+        </select>
+      </div>
 
-      <label>Responsável</label>
-      <input id="responsavel" placeholder="Ex.: José Verlaine"/>
+      <div class="field-group">
+        <label class="field-label" for="responsavel">Responsável</label>
+        <input id="responsavel" type="text" placeholder="Ex.: José Verlaine" />
+      </div>
 
       <div class="row">
-        <div>
-          <label>Turno</label>
-          <div class="turno-buttons" id="turnoBtns">
-            <button type="button" data-value="1º Turno">1º</button>
-            <button type="button" data-value="2º Turno">2º</button>
-            <button type="button" data-value="3º Turno">3º</button>
-          </div>
-          <input type="hidden" id="turno" value="2º Turno">
+        <div class="field-group">
+          <label class="field-label" for="turno">Turno</label>
+          <select id="turno">
+            <option value="1º Turno">1º Turno</option>
+            <option value="2º Turno" selected>2º Turno</option>
+            <option value="3º Turno">3º Turno</option>
+          </select>
         </div>
-        <div>
-          <label>Programa</label>
-          <input id="programa" placeholder="Ex.: 710094"/>
+
+        <div class="field-group">
+          <label class="field-label" for="programa">Programa</label>
+          <input id="programa" type="text" placeholder="Ex.: 710094" />
         </div>
       </div>
 
       <div class="row">
-        <div>
-          <label>Documento</label>
-          <input id="documento" placeholder="Ex.: 49"/>
+        <div class="field-group">
+          <label class="field-label" for="documento">Documento</label>
+          <input id="documento" type="text" placeholder="Ex.: 49" />
         </div>
-        <div>
-          <label>Número</label>
-          <input id="numero" placeholder="Ex.: 31.32"/>
+
+        <div class="field-group">
+          <label class="field-label" for="numero">Número</label>
+          <input id="numero" type="text" placeholder="Ex.: 31.32" />
         </div>
       </div>
 
-      <label>Data</label>
-      <input id="data" type="date"/>
+      <div class="field-group">
+        <label class="field-label" for="data">Data</label>
+        <input id="data" type="date" />
+      </div>
 
       <div class="row">
-        <div>
-          <label>Qtde caixas revisadas</label>
-          <input id="qtdRevisadas" type="number" min="0"/>
+        <div class="field-group">
+          <label class="field-label" for="qtdCaixas">Qtde caixas inspecionadas</label>
+          <input id="qtdCaixas" type="number" min="0" placeholder="Ex.: 24" />
         </div>
-        <div>
-          <label>Qtde problemas</label>
-          <input id="qtdProblemas" type="number" min="0"/>
+
+        <div class="field-group">
+          <label class="field-label" for="qtdProblemas">Qtde problemas</label>
+          <input id="qtdProblemas" type="number" min="0" placeholder="Ex.: 3" />
         </div>
       </div>
 
-      <label>Descrição dos problemas</label>
-      <textarea id="descricao" placeholder="Ex.: Bolhas, extrias, falha de registro..."></textarea>
+      <div class="field-group">
+        <label class="field-label" for="descricao">Descrição dos problemas</label>
+        <textarea
+          id="descricao"
+          placeholder="Ex.: Bolhas, extrias, falha de registro..."
+        ></textarea>
+      </div>
 
-      <!-- BOTÃO ÚNICO -->
-      <button class="btn" id="btnShare">GERAR & COMPARTILHAR</button>
+      <button class="btn-main" id="btnGerar">Gerar & Compartilhar</button>
 
-      <div class="hint">
-        • O botão gera a imagem do relatório e abre o menu de compartilhamento.<br>
+      <p class="helper-text">
+        • O botão gera a imagem do relatório e abre o menu de compartilhamento.<br />
         • Se o navegador não suportar, o PNG é baixado automaticamente.
-      </div>
+      </p>
     </div>
 
-    <canvas id="canvas" width="1080" height="1920"></canvas>
+    <!-- RELATÓRIO (PREVIEW / PRINT) -->
+    <div class="report-card" id="report-card">
+      <div class="report-title">Inspeção de Caixas - 2D</div>
+
+      <div class="report-section report-row">
+        <div>
+          <div class="report-label">Função</div>
+          <div class="report-value" id="r-funcao">–</div>
+        </div>
+        <div>
+          <div class="report-label">Responsável</div>
+          <div class="report-value" id="r-responsavel">–</div>
+        </div>
+      </div>
+
+      <div class="report-section report-row">
+        <div>
+          <div class="report-label">Turno</div>
+          <div class="report-value" id="r-turno">–</div>
+        </div>
+        <div>
+          <div class="report-label">Programa</div>
+          <div class="report-value" id="r-programa">–</div>
+        </div>
+      </div>
+
+      <div class="report-section report-row">
+        <div>
+          <div class="report-label">Documento</div>
+          <div class="report-value" id="r-documento">–</div>
+        </div>
+        <div>
+          <div class="report-label">Número</div>
+          <div class="report-value" id="r-numero">–</div>
+        </div>
+      </div>
+
+      <div class="report-section report-row">
+        <div>
+          <div class="report-label">Data</div>
+          <div class="report-value" id="r-data">–</div>
+        </div>
+        <div>
+          <div class="report-label">Caixas / Problemas</div>
+          <div class="report-value" id="r-qtd">–</div>
+        </div>
+      </div>
+
+      <div class="report-section">
+        <div class="report-label">Descrição dos problemas</div>
+        <div class="report-value" id="r-descricao">
+          –
+        </div>
+      </div>
+    </div>
   </div>
 
-<script>
-const canvas=document.getElementById("canvas");
-const ctx=canvas.getContext("2d");
+  <script>
+    // Preenche data de hoje por padrão
+    (function () {
+      const dataInput = document.getElementById("data");
+      if (!dataInput.value) {
+        const hoje = new Date();
+        const ano = hoje.getFullYear();
+        const mes = String(hoje.getMonth() + 1).padStart(2, "0");
+        const dia = String(hoje.getDate()).padStart(2, "0");
+        dataInput.value = `${ano}-${mes}-${dia}`;
+      }
+    })();
 
-/* --- Turnos (1º, 2º, 3º) --- */
-document.querySelectorAll(".turno-buttons button").forEach(btn=>{
-  btn.addEventListener("click",()=>{
-    document.getElementById("turno").value=btn.dataset.value;
-    document.querySelectorAll(".turno-buttons button")
-      .forEach(b=>b.classList.remove("active"));
-    btn.classList.add("active");
-  });
-});
-// deixa 2º turno ativo por padrão
-document.querySelector('.turno-buttons button[data-value="2º Turno"]').classList.add("active");
+    function atualizarPreview() {
+      const funcao = document.getElementById("funcao").value || "–";
+      const responsavel =
+        document.getElementById("responsavel").value.trim() || "–";
+      const turno = document.getElementById("turno").value || "–";
+      const programa =
+        document.getElementById("programa").value.trim() || "–";
+      const documento =
+        document.getElementById("documento").value.trim() || "–";
+      const numero = document.getElementById("numero").value.trim() || "–";
+      const data = document.getElementById("data").value || "";
+      const qtdCaixas =
+        document.getElementById("qtdCaixas").value.trim() || "0";
+      const qtdProblemas =
+        document.getElementById("qtdProblemas").value.trim() || "0";
+      const descricao =
+        document.getElementById("descricao").value.trim() || "Sem registros.";
 
-function getData(){
-  const g=id=>document.getElementById(id).value||"-";
-  const dataInput=document.getElementById("data").value;
-  const hoje=new Date();
-  const dataObj=dataInput?new Date(dataInput+"T00:00:00"):hoje;
-  const data=dataObj.toLocaleDateString("pt-BR");
-  const hora=hoje.toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"});
+      document.getElementById("r-funcao").textContent = funcao;
+      document.getElementById("r-responsavel").textContent = responsavel;
+      document.getElementById("r-turno").textContent = turno;
+      document.getElementById("r-programa").textContent = programa;
+      document.getElementById("r-documento").textContent = documento;
+      document.getElementById("r-numero").textContent = numero;
 
-  return{
-    funcao:g("funcao"),
-    responsavel:g("responsavel"),
-    turno:g("turno"),
-    programa:g("programa"),
-    documento:g("documento"),
-    numero:g("numero"),
-    data,
-    qtdRev:g("qtdRevisadas"),
-    qtdProb:g("qtdProblemas"),
-    desc:g("descricao"),
-    hora
-  };
-}
+      if (data) {
+        const [ano, mes, dia] = data.split("-");
+        document.getElementById("r-data").textContent = `${dia}/${mes}/${ano}`;
+      } else {
+        document.getElementById("r-data").textContent = "–";
+      }
 
-function wrap(text,x,y,maxWidth,lineHeight){
-  const words=text.split(" ");
-  let line="";
-  for(let n=0;n<words.length;n++){
-    const testLine=line+words[n]+" ";
-    if(ctx.measureText(testLine).width>maxWidth && n>0){
-      ctx.fillText(line,x,y);
-      line=words[n]+" ";
-      y+=lineHeight;
-    }else{
-      line=testLine;
+      document.getElementById(
+        "r-qtd"
+      ).textContent = `${qtdCaixas} caixas / ${qtdProblemas} problemas`;
+      document.getElementById("r-descricao").textContent = descricao;
     }
-  }
-  ctx.fillText(line,x,y);
-}
 
-function draw(){
-  const d=getData();
-  ctx.fillStyle="#e5e5e5";
-  ctx.fillRect(0,0,1080,1920);
-  ctx.fillStyle="#ffffff";
-  ctx.fillRect(90,90,900,1740);
+    async function gerarECompartilhar() {
+      atualizarPreview();
 
-  let y=170;
-  ctx.fillStyle="#000";
-  ctx.textAlign="center";
-  ctx.font="bold 58px system-ui";
-  ctx.fillText("REVISÃO DE CAIXAS - 2D",540,y);
-  ctx.textAlign="left";
+      const reportCard = document.getElementById("report-card");
 
-  y+=120;
-  ctx.font="bold 42px system-ui";
-  ctx.fillText("Função:",130,y);
-  ctx.fillText("Responsável:",580,y);
-  ctx.font="40px system-ui";
-  ctx.fillText(d.funcao,130,y+46);
-  ctx.fillText(d.responsavel,580,y+46);
+      const canvas = await html2canvas(reportCard, {
+        scale: window.devicePixelRatio || 2,
+        useCORS: true,
+      });
 
-  y+=140;
-  ctx.font="bold 42px system-ui";
-  ctx.fillText("Turno:",130,y);
-  ctx.fillText("Programa:",580,y);
-  ctx.font="40px system-ui";
-  ctx.fillText(d.turno,130,y+46);
-  ctx.fillText(d.programa,580,y+46);
+      canvas.toBlob(async (blob) => {
+        if (!blob) return;
 
-  y+=140;
-  ctx.font="bold 42px system-ui";
-  ctx.fillText("Documento:",130,y);
-  ctx.fillText("Número:",580,y);
-  ctx.font="40px system-ui";
-  ctx.fillText(d.documento,130,y+46);
-  ctx.fillText(d.numero,580,y+46);
-
-  y+=140;
-  ctx.font="bold 42px system-ui";
-  ctx.fillText("Data:",130,y);
-  ctx.font="40px system-ui";
-  ctx.fillText(d.data,130,y+46);
-
-  y+=120;
-  ctx.strokeStyle="#d4d4d4";
-  ctx.lineWidth=3;
-  ctx.beginPath();
-  ctx.moveTo(130,y);
-  ctx.lineTo(960,y);
-  ctx.stroke();
-
-  y+=40;
-  ctx.font="bold 42px system-ui";
-  ctx.fillText("Qtde caixas revisadas:",130,y);
-  ctx.fillText("Qtde problemas:",580,y);
-  ctx.font="40px system-ui";
-  ctx.fillText(d.qtdRev,130,y+46);
-  ctx.fillText(d.qtdProb,580,y+46);
-
-  y+=120;
-  ctx.strokeStyle="#d4d4d4";
-  ctx.beginPath();
-  ctx.moveTo(130,y);
-  ctx.lineTo(960,y);
-  ctx.stroke();
-
-  y+=40;
-  ctx.font="bold 42px system-ui";
-  ctx.fillStyle="#000";
-  ctx.fillText("Descrição dos problemas:",130,y);
-  y+=56;
-  ctx.font="38px system-ui";
-  wrap(d.desc,130,y,830,44);
-
-  ctx.font="30px system-ui";
-  ctx.fillStyle="#9ca3af";
-  ctx.textAlign="center";
-  ctx.fillText(
-    `Registro gerado em ${d.data} às ${d.hora}`,
-    540,
-    1770
-  );
-  ctx.textAlign="left";
-}
-
-async function gerarECompartilhar(){
-  draw();
-  canvas.toBlob(async blob=>{
-    if(!blob)return;
-    const file=new File([blob],"revisao-caixas-2d.png",{type:"image/png"});
-
-    if(navigator.share && navigator.canShare && navigator.canShare({files:[file]})){
-      try{
-        await navigator.share({
-          title:"Revisão de Caixas - 2D",
-          text:"Relatório gerado pelo app de revisão de caixas.",
-          files:[file]
+        const file = new File([blob], "inspecao-caixas-2D.png", {
+          type: "image/png",
         });
-      }catch(e){console.log("Compartilhamento cancelado",e);}
-    }else{
-      // fallback: baixa o PNG
-      const a=document.createElement("a");
-      a.download="revisao-caixas-2d.png";
-      a.href=URL.createObjectURL(blob);
-      a.click();
-      URL.revokeObjectURL(a.href);
-      alert("Compartilhamento direto não suportado. O arquivo foi baixado como PNG.");
+
+        if (navigator.canShare && navigator.canShare({ files: [file] })) {
+          try {
+            await navigator.share({
+              files: [file],
+              title: "Inspeção de Caixas - 2D",
+              text: "Relatório de inspeção de caixas 2D.",
+            });
+          } catch (err) {
+            console.log("Compartilhamento cancelado ou falhou:", err);
+          }
+        } else {
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = "inspecao-caixas-2D.png";
+          document.body.appendChild(a);
+          a.click();
+          a.remove();
+          URL.revokeObjectURL(url);
+        }
+      }, "image/png");
     }
-  });
-}
 
-document.getElementById("btnShare").addEventListener("click",e=>{
-  e.preventDefault();
-  gerarECompartilhar();
-});
-
-// desenha uma prévia inicial
-draw();
-</script>
+    document
+      .getElementById("btnGerar")
+      .addEventListener("click", function () {
+        gerarECompartilhar();
+      });
+  </script>
 </body>
 </html>
