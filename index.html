@@ -5,134 +5,273 @@
   <title>Revisão de Caixas - 2D</title>
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <style>
-    *{box-sizing:border-box;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+    *{
+      box-sizing:border-box;
+      font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif
+    }
     body{
-      margin:0;padding:16px;
-      background:#111827;
-      display:flex;flex-direction:column;align-items:center;gap:12px;
+      margin:0;
+      padding:16px;
+      background:radial-gradient(circle at top,#1f2937,#020617);
+      min-height:100vh;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:16px;
       color:#111827;
     }
+    .app-shell{
+      width:100%;
+      max-width:440px;
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+    }
     .card-form{
-      width:100%;max-width:420px;
-      background:#f9fafb;border-radius:16px;
-      padding:14px 14px 18px;
-      box-shadow:0 12px 30px rgba(0,0,0,.35);
+      width:100%;
+      background:rgba(249,250,251,0.98);
+      border-radius:22px;
+      padding:0 14px 16px;
+      box-shadow:0 18px 40px rgba(0,0,0,.45);
+      border:1px solid rgba(148,163,184,.35);
+      backdrop-filter:blur(10px);
     }
-    .card-form h1{
-      font-size:18px;margin:0 0 8px;font-weight:700;text-align:center;color:#111827;
+    .card-header{
+      margin:0 -14px 10px;
+      padding:12px 18px 14px;
+      border-radius:22px 22px 14px 14px;
+      background:linear-gradient(135deg,#111827,#1d4ed8);
+      display:flex;
+      flex-direction:column;
+      gap:4px;
     }
+    .card-title{
+      font-size:17px;
+      font-weight:700;
+      color:#f9fafb;
+    }
+    .card-subtitle{
+      font-size:12px;
+      color:#cbd5f5;
+    }
+    .pill-row{
+      display:flex;
+      gap:6px;
+      margin-top:4px;
+      flex-wrap:wrap;
+    }
+    .pill{
+      font-size:11px;
+      padding:2px 8px;
+      border-radius:999px;
+      border:1px solid rgba(148,163,184,.7);
+      color:#e5e7eb;
+    }
+
+    .section-label{
+      font-size:11px;
+      font-weight:600;
+      text-transform:uppercase;
+      letter-spacing:0.06em;
+      color:#6b7280;
+      margin:4px 2px 4px;
+    }
+
     .form-row{display:flex;gap:8px}
-    .form-group{display:flex;flex-direction:column;gap:3px;margin-bottom:8px;flex:1}
-    label{font-size:12px;font-weight:600;color:#374151}
+    .form-group{
+      display:flex;
+      flex-direction:column;
+      gap:3px;
+      margin-bottom:8px;
+      flex:1;
+    }
+    label{
+      font-size:12px;
+      font-weight:600;
+      color:#374151;
+    }
     input,textarea,select{
-      border-radius:8px;border:1px solid #d1d5db;
-      padding:6px 8px;font-size:14px;outline:none;background:#fff;
+      border-radius:10px;
+      border:1px solid #d1d5db;
+      padding:7px 9px;
+      font-size:14px;
+      outline:none;
+      background:#ffffff;
+      transition:border-color .15s,box-shadow .15s,transform .08s;
     }
     input:focus,textarea:focus,select:focus{
-      border-color:#6366f1;box-shadow:0 0 0 1px rgba(99,102,241,.4);
+      border-color:#4f46e5;
+      box-shadow:0 0 0 1px rgba(79,70,229,.35);
+      transform:translateY(-1px);
     }
-    textarea{resize:vertical;min-height:60px;max-height:140px}
-    .buttons{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+    textarea{
+      resize:vertical;
+      min-height:70px;
+      max-height:160px;
+    }
+
+    .buttons{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      margin-top:8px;
+    }
     .btn{
-      border:none;border-radius:999px;
-      padding:8px 12px;font-size:14px;font-weight:600;cursor:pointer;
-      flex:1;min-width:130px;display:flex;align-items:center;justify-content:center;
+      border:none;
+      border-radius:999px;
+      padding:9px 12px;
+      font-size:14px;
+      font-weight:600;
+      cursor:pointer;
+      flex:1;
+      min-width:130px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:6px;
+      transition:transform .08s,box-shadow .12s,background .12s;
+      white-space:nowrap;
     }
-    .btn-primary{background:#111827;color:#f9fafb}
-    .btn-secondary{background:#e5e7eb;color:#111827}
-    .btn-outline{background:transparent;border:1px solid #9ca3af;color:#e5e7eb}
-    .hint{font-size:11px;color:#6b7280;margin-top:6px}
+    .btn-primary{
+      background:linear-gradient(135deg,#111827,#16a34a);
+      color:#f9fafb;
+      box-shadow:0 8px 16px rgba(15,23,42,.6);
+    }
+    .btn-secondary{
+      background:#e5e7eb;
+      color:#111827;
+    }
+    .btn-outline{
+      background:transparent;
+      border:1px solid #9ca3af;
+      color:#111827;
+    }
+    .btn-outline.alt{
+      color:#e5e7eb;
+      border-color:#9ca3af;
+    }
+    .btn:active{
+      transform:translateY(1px);
+      box-shadow:none;
+    }
+
+    .hint{
+      font-size:11px;
+      color:#6b7280;
+      margin-top:6px;
+    }
+
+    .preview-title{
+      color:#e5e7eb;
+      font-size:12px;
+      text-shadow:0 1px 2px rgba(0,0,0,.7);
+    }
     canvas{
-      width:100%;max-width:420px;border-radius:8px;
-      background:#000;box-shadow:0 16px 36px rgba(0,0,0,.6);
+      width:100%;
+      max-width:440px;
+      border-radius:18px;
+      background:#020617;
+      box-shadow:0 22px 46px rgba(0,0,0,.75);
+      border:1px solid rgba(30,64,175,.6);
     }
-    .preview-title{color:#e5e7eb;font-size:13px}
   </style>
 </head>
 <body>
-  <div class="card-form">
-    <h1>Revisão de Caixas - 2D</h1>
-
-    <div class="form-row">
-      <div class="form-group">
-        <label>Função</label>
-        <select id="funcao">
-          <option>Líder Técnico</option>
-          <option>Preparador</option>
-        </select>
+  <div class="app-shell">
+    <div class="card-form">
+      <div class="card-header">
+        <div class="card-title">Revisão de Caixas - 2D</div>
+        <div class="card-subtitle">
+          Registro rápido de caixas revisadas para líder técnico e preparador.
+        </div>
+        <div class="pill-row">
+          <div class="pill">Geração de imagem</div>
+          <div class="pill">Pronto para WhatsApp</div>
+          <div class="pill">Turno / Programa / Documento</div>
+        </div>
       </div>
+
+      <div class="section-label">Identificação</div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Função</label>
+          <select id="funcao">
+            <option>Líder Técnico</option>
+            <option>Preparador</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Responsável</label>
+          <input id="responsavel" placeholder="Seu nome" />
+        </div>
+      </div>
+
+      <div class="section-label">Dados da revisão</div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Turno</label>
+          <input id="turno" placeholder="Ex.: 2º Turno" />
+        </div>
+        <div class="form-group">
+          <label>Programa</label>
+          <input id="programa" placeholder="Ex.: 710094" />
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Documento</label>
+          <input id="documento" placeholder="Ex.: 49" />
+        </div>
+        <div class="form-group">
+          <label>Número</label>
+          <input id="numero" placeholder="Ex.: 31.32" />
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Data</label>
+          <input id="data" type="date" />
+        </div>
+      </div>
+
+      <div class="section-label">Quantidades</div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Qtde caixas revisadas</label>
+          <input id="qtdRevisadas" type="number" min="0" />
+        </div>
+        <div class="form-group">
+          <label>Qtde problemas</label>
+          <input id="qtdProblemas" type="number" min="0" />
+        </div>
+      </div>
+
+      <div class="section-label">Descrição dos problemas</div>
       <div class="form-group">
-        <label>Responsável</label>
-        <input id="responsavel" placeholder="Seu nome" />
+        <textarea id="descricao" placeholder="Ex.: Bolhas no verniz, falha de registro magenta, falta de base em 3 pares..."></textarea>
+      </div>
+
+      <div class="buttons">
+        <button class="btn btn-primary" id="btnGerar">Gerar imagem</button>
+        <button class="btn btn-secondary" id="btnDownload">Baixar PNG</button>
+      </div>
+
+      <div class="buttons">
+        <button class="btn btn-outline" id="btnShare">Gerar e Compartilhar</button>
+        <button class="btn btn-outline" id="btnWhats">Texto WhatsApp</button>
+      </div>
+
+      <div class="hint">
+        • Preencha os campos, clique em <b>Gerar imagem</b> e use <b>Gerar e Compartilhar</b> para enviar direto pelo celular.<br>
+        • O layout da imagem fica padronizado para auditorias e passagem de turno.
       </div>
     </div>
 
-    <div class="form-row">
-      <div class="form-group">
-        <label>Turno</label>
-        <input id="turno" placeholder="Ex.: 2º Turno" />
-      </div>
-      <div class="form-group">
-        <label>Programa</label>
-        <input id="programa" placeholder="Ex.: 710094" />
-      </div>
-    </div>
-
-    <div class="form-row">
-      <div class="form-group">
-        <label>Documento</label>
-        <input id="documento" placeholder="Ex.: 49" />
-      </div>
-      <div class="form-group">
-        <label>Número</label>
-        <input id="numero" placeholder="Ex.: 31.32" />
-      </div>
-    </div>
-
-    <div class="form-row">
-      <div class="form-group">
-        <label>Data</label>
-        <input id="data" type="date" />
-      </div>
-    </div>
-
-    <div class="form-row">
-      <div class="form-group">
-        <label>Qtde caixas revisadas</label>
-        <input id="qtdRevisadas" type="number" min="0" />
-      </div>
-      <div class="form-group">
-        <label>Qtde problemas</label>
-        <input id="qtdProblemas" type="number" min="0" />
-      </div>
-    </div>
-
-    <div class="form-group">
-      <label>Descrição dos problemas</label>
-      <textarea id="descricao" placeholder="Ex.: Bolhas e falhas nos cabeçotes"></textarea>
-    </div>
-
-    <div class="buttons">
-      <button class="btn btn-primary" id="btnGerar">Gerar imagem</button>
-      <button class="btn btn-secondary" id="btnDownload">Baixar PNG</button>
-    </div>
-
-    <div class="buttons">
-      <button class="btn btn-outline" id="btnShare">Gerar e Compartilhar</button>
-    </div>
-
-    <div class="buttons">
-      <button class="btn btn-outline" id="btnWhats">Texto WhatsApp</button>
-    </div>
-
-    <div class="hint">
-      • A imagem gerada fica igual ao modelo da revisão.<br>
-      • Você pode baixar e compartilhar diretamente.
-    </div>
+    <div class="preview-title">Preview da imagem gerada para envio</div>
+    <canvas id="canvas" width="1080" height="1920"></canvas>
   </div>
-
-  <div class="preview-title">Preview da imagem gerada</div>
-  <canvas id="canvas" width="1080" height="1920"></canvas>
 
   <script>
     const canvas = document.getElementById("canvas");
@@ -189,7 +328,7 @@
       ctx.fillStyle = "#e5e5e5";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      // cartão
+      // cartão branco
       const m = 90;
       const cardX = m, cardY = m;
       const cardW = canvas.width - m*2;
@@ -197,25 +336,22 @@
       ctx.fillStyle="#ffffff";
       ctx.fillRect(cardX, cardY, cardW, cardH);
 
-      // título
-      ctx.fillStyle="#000";
-      ctx.font="bold 60px system-ui";
+      // faixa de topo
+      const headerH = 130;
+      ctx.fillStyle = "#111827";
+      ctx.fillRect(cardX, cardY, cardW, headerH);
+
+      ctx.fillStyle="#f9fafb";
+      ctx.font="bold 58px system-ui";
       ctx.textAlign="center";
-      ctx.fillText("REVISÃO DE CAIXAS - 2D", canvas.width/2, cardY+40);
+      ctx.textBaseline="top";
+      ctx.fillText("REVISÃO DE CAIXAS - 2D", canvas.width/2, cardY+26);
 
       ctx.textAlign="left";
-      let y = cardY + 140;
-
-      // linha decorativa
-      ctx.strokeStyle="#d4d4d4";ctx.lineWidth=3;
-      ctx.beginPath();
-      ctx.moveTo(cardX+40,y);
-      ctx.lineTo(cardX+cardW-40,y);
-      ctx.stroke();
-
-      y+=40;
+      let y = cardY + headerH + 30;
 
       // Função / Responsável
+      ctx.fillStyle="#000";
       ctx.font="bold 42px system-ui";
       ctx.fillText("Função:",cardX+40,y);
       ctx.fillText("Responsável:",cardX+cardW/2+20,y);
@@ -254,12 +390,13 @@
       // linha divisória
       y+=120;
       ctx.strokeStyle="#d4d4d4";
+      ctx.lineWidth=3;
       ctx.beginPath();
       ctx.moveTo(cardX+40,y);
       ctx.lineTo(cardX+cardW-40,y);
       ctx.stroke();
 
-      // Revisadas / com problema
+      // Revisadas / problemas
       y+=40;
       ctx.font="bold 42px system-ui";
       ctx.fillText("Qtde caixas revisadas:",cardX+40,y);
@@ -280,6 +417,7 @@
       // descrição
       y+=40;
       ctx.font="bold 42px system-ui";
+      ctx.fillStyle="#000";
       ctx.fillText("Descrição dos problemas:",cardX+40,y);
 
       y+=56;
@@ -322,9 +460,11 @@
               files:[file]
             });
           }catch(err){
-            console.log("Cancelado",err);
+            console.log("Compartilhamento cancelado",err);
           }
-        }else alert("Compartilhamento não suportado.");
+        }else{
+          alert("Seu navegador não suporta o botão de compartilhar.");
+        }
       });
     });
 
